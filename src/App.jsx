@@ -67,9 +67,16 @@ export default function App() {
         <NavSearchResult movies={movies} />
       </Nav>
       <Main>
-        <MovieListContainer >
-          <MovieList movies={movies} />
-        </MovieListContainer>
+        <div className="row mt-2">
+          <div className="col-md-9">
+            <ListContainer>
+              <MovieList movies={movies} />
+            </ListContainer>{" "}
+          </div>
+          <div className="col-md-3">
+            <MyMovieListContainer />
+          </div>
+        </div>
       </Main>
     </>
   );
@@ -115,33 +122,24 @@ function NavSearchResult({ movies }) {
 }
 
 function Main({ children }) {
-  return (
-    <main className="container">
-      <div className="row mt-2">
-        <div className="col-md-9">{children} </div>
-        <div className="col-md-3">
-          <MyMovieListContainer />
-        </div>
-      </div>
-    </main>
-  );
+  return <main className="container">{children} </main>;
 }
 
-function MovieListContainer({ children }) {
-  const [isOpen1, setIsOpen1] = useState(true);
+function ListContainer({ children }) {
+  const [isOpen, setIsOpen] = useState(true);
   return (
     <div className="movie-list">
       <button
         className="btn btn-sm btn-outline-primary mb-2"
-        onClick={() => setIsOpen1((val) => !val)}
+        onClick={() => setIsOpen((val) => !val)}
       >
-        {isOpen1 ? (
+        {isOpen ? (
           <i className="bi bi-chevron-up"></i>
         ) : (
           <i className="bi bi-chevron-down"></i>
         )}
       </button>
-      {isOpen1 && children}
+      {isOpen && children}
     </div>
   );
 }
