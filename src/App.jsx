@@ -59,6 +59,7 @@ const getAvarage = (array) =>
 
 export default function App() {
   const [movies, setMovies] = useState(movie_list);
+  const [selectedMovies, setSelectedMovies] = useState(selected_movie_list);
   return (
     <>
       <Nav>
@@ -74,7 +75,12 @@ export default function App() {
             </ListContainer>{" "}
           </div>
           <div className="col-md-3">
-            <MyMovieListContainer />
+            <ListContainer>
+              <>
+                <MyListSummary selectedMovies={selectedMovies} />
+                <MyMovieList selectedMovies={selectedMovies} />
+              </>
+            </ListContainer>
           </div>
         </div>
       </Main>
@@ -173,32 +179,32 @@ function Movie({ movie }) {
   );
 }
 
-function MyMovieListContainer() {
-  const [selectedMovies, setSelectedMovies] = useState(selected_movie_list);
-  const [isOpen2, setIsOpen2] = useState(true);
+// function MyMovieListContainer() {
+//   const [selectedMovies, setSelectedMovies] = useState(selected_movie_list);
+//   const [isOpen2, setIsOpen2] = useState(true);
 
-  return (
-    <div className="movie-list">
-      <button
-        className="btn btn-sm btn-outline-primary mb-2"
-        onClick={() => setIsOpen2((val) => !val)}
-      >
-        {isOpen2 ? (
-          <i className="bi bi-chevron-up"></i>
-        ) : (
-          <i className="bi bi-chevron-down"></i>
-        )}
-      </button>
+//   return (
+//     <div className="movie-list">
+//       <button
+//         className="btn btn-sm btn-outline-primary mb-2"
+//         onClick={() => setIsOpen2((val) => !val)}
+//       >
+//         {isOpen2 ? (
+//           <i className="bi bi-chevron-up"></i>
+//         ) : (
+//           <i className="bi bi-chevron-down"></i>
+//         )}
+//       </button>
 
-      {isOpen2 && (
-        <>
-          <MyListSummary selectedMovies={selectedMovies} />
-          <MyMovieList selectedMovies={selectedMovies} />
-        </>
-      )}
-    </div>
-  );
-}
+//       {isOpen2 && (
+//         <>
+//           <MyListSummary selectedMovies={selectedMovies} />
+//           <MyMovieList selectedMovies={selectedMovies} />
+//         </>
+//       )}
+//     </div>
+//   );
+// }
 
 function MyListSummary({ selectedMovies }) {
   const avgRating = getAvarage(selected_movie_list.map((m) => m.rating));
