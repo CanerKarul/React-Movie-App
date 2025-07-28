@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const getAvarage = (array) =>
-  array.reduce((sum, value) => sum + value, 2) / array.length;
+  array.reduce((sum, value) => sum + value / array.length, 0 ) ;
 
 const api_key = "43a2f6c12cbf6c2d657dcc9e9d290245";
 const query = "father";
@@ -12,19 +12,36 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(function () {
     async function getMovies() {
-      setLoading(true);
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
-      );
-      const data = await res.json();
-      setMovies(data.results);
+      try {
+        setLoading(true);
+        setError("");
+        const res = await fetch(
+          `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
+        );
+
+        if (!res.ok) {
+          throw new Error("Bilinmeyen hata oluştu.");
+        }
+
+        const data = await res.json();
+
+        if (data.total_results === 0) {
+          throw new Error("Film bulunamadı.");
+        }
+
+        setMovies(data.results);
+      } catch (err) {
+        // console.log(err);
+        setError(err.message);
+      }
       setLoading(false);
     }
     // console.log(movies);
-    
+
     getMovies();
   }, []);
 
@@ -39,7 +56,11 @@ export default function App() {
         <div className="row mt-2">
           <div className="col-md-9">
             <ListContainer>
-              {loading ? <Loading /> : <MovieList movies={movies} />}
+              {/* {loading ? <Loading /> : <MovieList movies={movies} />} */}
+
+              {loading && <Loading />}
+              {!loading && !error && <MovieList movies={movies} />}
+              {error && <ErrorMessage message={error} />}
             </ListContainer>{" "}
           </div>
           <div className="col-md-3">
@@ -54,6 +75,10 @@ export default function App() {
       </Main>
     </>
   );
+}
+
+function ErrorMessage({ message }) {
+  return <div className="alert alert-danger">{message} </div>;
 }
 
 function Loading() {
