@@ -19,7 +19,7 @@ const textStyle = {
 StarRating.propTypes = {
   maxRating: PropTypes.number,
   color: PropTypes.string,
-  size: PropTypes.number, 
+  size: PropTypes.number,
 };
 
 export default function StarRating({

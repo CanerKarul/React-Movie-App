@@ -55,11 +55,21 @@ const selected_movie_list = [
 const getAvarage = (array) =>
   array.reduce((sum, value) => sum + value, 2) / array.length;
 
+const api_key = "43a2f6c12cbf6c2d657dcc9e9d290245";
+const query = "fight";
+
 // console.log(getAvarage(selected_movie_list.map((m) => m.rating)));
 
 export default function App() {
-  const [movies, setMovies] = useState(movie_list);
-  const [selectedMovies, setSelectedMovies] = useState(selected_movie_list);
+  const [movies, setMovies] = useState([]);
+  const [selectedMovies, setSelectedMovies] = useState([]);
+
+  fetch(
+    `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
+  )
+    .then((res) => res.json())
+    .then((data) => setMovies(data.results));
+
   return (
     <>
       <Nav>
@@ -164,14 +174,20 @@ function Movie({ movie }) {
   return (
     <div className="col mb-2">
       <div className="card">
-        <img src={movie.Poster} alt={movie.Title} className="card-img-top" />
+        <img
+          src={ movie.poster_path ? `https://media.themoviedb.org/t/p/w440_and_h660_face` + movie.poster_path
+            : "/img/no-image.png"
+          }
+          alt={movie.title}
+          className="card-img-top"
+        />
 
         <div className="card-body">
-          <h6 className="card-title">{movie.Title}</h6>
+          <h6 className="card-title">{movie.title}</h6>
 
           <div>
             <i className="bi bi-calendar2-date me-1"></i>
-            <span>{movie.Year} </span>
+            <span>{movie.release_date} </span>
           </div>
         </div>
       </div>
