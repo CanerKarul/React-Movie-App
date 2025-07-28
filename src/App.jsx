@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const movie_list = [
   {
@@ -64,11 +64,14 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
 
-  fetch(
-    `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
-  )
-    .then((res) => res.json())
-    .then((data) => setMovies(data.results));
+  useEffect(function () {
+    // First render (mount)
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
+    )
+      .then((res) => res.json())
+      .then((data) => setMovies(data.results));
+  }, []);
 
   return (
     <>
@@ -175,8 +178,11 @@ function Movie({ movie }) {
     <div className="col mb-2">
       <div className="card">
         <img
-          src={ movie.poster_path ? `https://media.themoviedb.org/t/p/w440_and_h660_face` + movie.poster_path
-            : "/img/no-image.png"
+          src={
+            movie.poster_path
+              ? `https://media.themoviedb.org/t/p/w440_and_h660_face` +
+                movie.poster_path
+              : "/img/no-image.png"
           }
           alt={movie.title}
           className="card-img-top"
