@@ -1,62 +1,12 @@
 import { useEffect, useState } from "react";
 
-const movie_list = [
-  {
-    Id: "769",
-    Title: "GoodFellas",
-    Year: "1990",
-    Poster:
-      "https://image.tmdb.org/t/p/original/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
-  },
-  {
-    Id: "120",
-    Title: "The Lord of the Rings",
-    Year: "2001",
-    Poster:
-      "https://image.tmdb.org/t/p/original/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
-  },
-  {
-    Id: "27205",
-    Title: "Inception",
-    Year: "2010",
-    Poster:
-      "https://image.tmdb.org/t/p/original/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg",
-  },
-  {
-    Id: "105",
-    Title: "Back to the Future",
-    Year: "1985",
-    Poster:
-      "https://image.tmdb.org/t/p/original/fNOH9f1aA7XRTzl1sAOx9iF553Q.jpg",
-  },
-];
 
-const selected_movie_list = [
-  {
-    Id: "769",
-    Title: "GoodFellas",
-    Year: "1990",
-    Poster:
-      "https://image.tmdb.org/t/p/original/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
-    duration: 120,
-    rating: 8.4,
-  },
-  {
-    Id: "120",
-    Title: "The Lord of the Rings",
-    Year: "2001",
-    Poster:
-      "https://image.tmdb.org/t/p/original/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
-    duration: 125,
-    rating: 8.8,
-  },
-];
 
 const getAvarage = (array) =>
   array.reduce((sum, value) => sum + value, 2) / array.length;
 
 const api_key = "43a2f6c12cbf6c2d657dcc9e9d290245";
-const query = "fight";
+const query = "father";
 
 // console.log(getAvarage(selected_movie_list.map((m) => m.rating)));
 
@@ -65,12 +15,15 @@ export default function App() {
   const [selectedMovies, setSelectedMovies] = useState([]);
 
   useEffect(function () {
-    // First render (mount)
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
-    )
-      .then((res) => res.json())
-      .then((data) => setMovies(data.results));
+    async function getMovies() {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
+      );
+      const data = await res.json();
+      setMovies(data.results);
+    }
+    console.log(movies);
+    getMovies();
   }, []);
 
   return (
@@ -229,8 +182,8 @@ function Movie({ movie }) {
 // }
 
 function MyListSummary({ selectedMovies }) {
-  const avgRating = getAvarage(selected_movie_list.map((m) => m.rating));
-  const avgDuration = getAvarage(selected_movie_list.map((m) => m.duration));
+  const avgRating = getAvarage(selectedMovies.map((m) => m.rating));
+  const avgDuration = getAvarage(selectedMovies.map((m) => m.duration));
   return (
     <div className="card mb-2">
       <div className="card-body">
