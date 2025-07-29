@@ -23,6 +23,11 @@ export default function App() {
     setSelectedMovie(null);
   }
 
+  function handleAddToList(movie) {
+    setSelectedMovies((selectedMovies) => [...selectedMovies, movie]);
+    handleUnselectMovie();
+  }
+
   useEffect(
     function () {
       async function getMovies() {
@@ -89,13 +94,17 @@ export default function App() {
           </div>
           <div className="col-md-3">
             <ListContainer>
-              <MyListSummary selectedMovies={selectedMovies} />
-              <MyMovieList selectedMovies={selectedMovies} />
-              {selectedMovie && (
+              {selectedMovie ? (
                 <MovieDetails
                   selectedMovie={selectedMovie}
                   onUnSelectMovie={handleUnselectMovie}
+                  onAddToList={handleAddToList}
                 />
+              ) : (
+                <>
+                  <MyListSummary selectedMovies={selectedMovies} />
+                  <MyMovieList selectedMovies={selectedMovies} />
+                </>
               )}
             </ListContainer>
           </div>
@@ -196,7 +205,7 @@ function MovieList({ movies, onSelectMovie, selectedMovie }) {
   );
 }
 
-function MovieDetails({ selectedMovie, onUnSelectMovie }) {
+function MovieDetails({ selectedMovie, onUnSelectMovie, onAddToList }) {
   const [movie, setMovie] = useState({});
   const [loading, setLoading] = useState(false);
   useEffect(
@@ -254,6 +263,12 @@ function MovieDetails({ selectedMovie, onUnSelectMovie }) {
                   </span>
                 ))}
               </p>
+              <button
+                className="btn btn-primary me-1"
+                onClick={() => onAddToList(movie)}
+              >
+                Listeye Ekle
+              </button>
               <button className="btn btn-danger" onClick={onUnSelectMovie}>
                 Kapat
               </button>
@@ -326,8 +341,8 @@ function Movie({ movie, onSelectMovie, selectedMovie }) {
 // }
 
 function MyListSummary({ selectedMovies }) {
-  const avgRating = getAvarage(selectedMovies.map((m) => m.rating));
-  const avgDuration = getAvarage(selectedMovies.map((m) => m.duration));
+  const avgRating = getAvarage(selectedMovies.map((m) => m.vote_average));
+  const avgDuration = getAvarage(selectedMovies.map((m) => m.runtime));
   return (
     <div className="card mb-2">
       <div className="card-body">
@@ -359,22 +374,27 @@ function MyListMovie({ movie }) {
       <div className="row">
         <div className="col-4">
           <img
-            src={movie.Poster}
-            alt={movie.Title}
+            src={
+              movie.poster_path
+                ? `https://media.themoviedb.org/t/p/w440_and_h660_face` +
+                  movie.poster_path
+                : "/img/no-image.png"
+            }
+            alt={movie.title}
             className="img-fluid rounded-start"
           />
         </div>
         <div className="col-8">
           <div className="card-body">
-            <h6 className="card-title">{movie.Title}</h6>
+            <h6 className="card-title">{movie.title}</h6>
             <div className="d-flex justify-content-between">
               <p>
                 <i className="bi bi-star-fill text-warning me-1"></i>
-                <span>{movie.rating} </span>
+                <span>{movie.vote_average} </span>
               </p>
               <p>
                 <i className="bi bi-hourglass text-warning me-1"></i>
-                <span>{movie.duration} dk </span>
+                <span>{movie.runtime} dk </span>
               </p>
             </div>
           </div>
