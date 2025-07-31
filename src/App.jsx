@@ -16,8 +16,6 @@ import MovieDetails from "./components/Movies/MovieDetails";
 
 import { useState } from "react";
 
-const api_key = "43a2f6c12cbf6c2d657dcc9e9d290245";
-
 // console.log(getAvarage(selected_movie_list.map((m) => m.rating)));
 
 export default function App() {
