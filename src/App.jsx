@@ -1,3 +1,4 @@
+import useLocalStorage from "./hooks/useLocalStorage";
 import useMovieDetails from "./hooks/useMovieDetails";
 import useMovies from "./hooks/useMovies";
 import StarRating from "./StarRating";
@@ -12,7 +13,10 @@ const api_key = "43a2f6c12cbf6c2d657dcc9e9d290245";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [selectedMovies, setSelectedMovies] = useState([]);
+  const [selectedMovies, setSelectedMovies] = useLocalStorage(
+    [],
+    "selectedMovies"
+  );
 
   const [selectedMovie, setSelectedMovie] = useState(null);
 
