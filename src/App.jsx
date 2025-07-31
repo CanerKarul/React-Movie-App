@@ -9,7 +9,7 @@ const api_key = "43a2f6c12cbf6c2d657dcc9e9d290245";
 // console.log(getAvarage(selected_movie_list.map((m) => m.rating)));
 
 export default function App() {
-  const [query, setQuery] = useState("father");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,12 +37,16 @@ export default function App() {
 
   useEffect(
     function () {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
       async function getMovies() {
         try {
           setLoading(true);
           setError("");
           const res = await fetch(
-            `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`
+            `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}`,
+            { signal: signal }
           );
 
           if (!res.ok) {
@@ -58,7 +62,11 @@ export default function App() {
           setMovies(data.results);
         } catch (err) {
           // console.log(err);
-          setError(err.message);
+          if (err.name === "AbortError") {
+            console.log("aborted...");
+          } else {
+            setError(err.message);
+          }
         }
         setLoading(false);
       }
@@ -71,6 +79,10 @@ export default function App() {
       }
 
       getMovies();
+
+      return () => {
+        controller.abort();
+      };
     },
     [query]
   );
