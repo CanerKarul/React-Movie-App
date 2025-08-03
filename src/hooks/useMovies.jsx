@@ -56,7 +56,7 @@ export default function useMovies(query) {
       }
       // console.log(movies);
 
-      if (query.length < 4) {
+      if (query.length < 2) {
         setMovies([]);
         setError("");
         return;
