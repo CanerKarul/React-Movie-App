@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-const api_key = "43a2f6c12cbf6c2d657dcc9e9d290245";
+const api_key = import.meta.env.VITE_API_KEY;
 
 export default function useMovieDetails(id) {
   const [movie, setMovie] = useState({});
